@@ -54,6 +54,14 @@ int main() {
         cout << "Macierz odwrotna do Matrix1:" << endl;
         invMat.stan();
 
+        // Sprawdzanie, czy mat1 i invMat są wzajemnie odwrotne
+        if (mat1 == invMat) {
+            cout << "Macierze sa wzajemnie odwrotne." << endl;
+        }
+        else {
+            cout << "Macierze nie sa wzajemnie odwrotne." << endl;
+        }
+
     }
     catch (const bad_alloc& e) {
         cerr << "Błąd alokacji w pamięci: " << e.what() << endl;
