@@ -20,6 +20,7 @@ public:
     friend Matrix<U> operator*(const U x, const Matrix<U>& y); // Mnożenie macierzy przez skalar
     Matrix<T> operator*(const Matrix& mat) const; // Mnożenie macierzy przez macierz
     Matrix<T> operator!() const; // Macierzy odwrotna
+    bool operator==(const Matrix<T>& other) const; // Porównanie czy dwie macierze są do siebie odwrotne
     void stan(); // Stan macierzy (wypisywanie zawartości)
 
     //Analogicznie deklaracja elementów prywatnych, czyli dostępnych wewnątrz klasy
@@ -145,6 +146,7 @@ Matrix<T> Matrix<T>::operator*(const Matrix& mat) const
     return res;
 }
 
+// Utworzenie macierzy odwrotnej
 template <typename T>
 Matrix<T> Matrix<T>::operator!() const {
     if (r != c) {
@@ -170,6 +172,32 @@ Matrix<T> Matrix<T>::operator!() const {
         // Obsługa innych rozmiarów macierzy może być dodana tutaj
         throw runtime_error("Obsługiwane są tylko macierze 2x2.");
     }
+}
+
+// Sprawdzenie czy dwie macierze są do siebie odwrotne
+template <typename T>
+bool Matrix<T>::operator==(const Matrix<T>& other) const {
+    if (r != other.r || c != other.c) {
+        throw invalid_argument("Macierze muszą mieć takie same wymiary, aby można było porównać ich odwrotności.");
+    }
+
+    Matrix<T> identity(r, c);
+    for (int i = 0; i < r; ++i) {
+        for (int j = 0; j < c; ++j) {
+            identity.m[i][j] = (i == j) ? 1 : 0;
+        }
+    }
+
+    Matrix<T> product = (*this) * other;
+    for (int i = 0; i < r; ++i) {
+        for (int j = 0; j < c; ++j) {
+            if (abs(product.m[i][j] - identity.m[i][j]) > 1e-9) {
+                return false;
+            }
+        }
+    }
+
+    return true;
 }
 
 // Stan macierzy (wypisywanie zawartości)
